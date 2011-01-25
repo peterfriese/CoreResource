@@ -631,6 +631,9 @@
 }
 
 + (void) findAllRemote:(id)parameters andNotify:(id)del withSelector:(SEL)selector {
+	UIApplication* app = [UIApplication sharedApplication];
+	app.networkActivityIndicatorVisible = YES;	
+	
     CoreRequest *request = [[[CoreRequest alloc] initWithURL:
         [CoreUtils URLWithSite:[self remoteURLForCollectionAction:Read] andFormat:@"json" andParameters:parameters]] autorelease];
     request.delegate = self;
@@ -658,11 +661,18 @@
     deserializer.action = request.coreSelector;
     [[[self coreManager] deserialzationQueue] addOperation:deserializer];
     [deserializer release];
+
+	UIApplication* app = [UIApplication sharedApplication];
+	app.networkActivityIndicatorVisible = NO;	
+	
     //NSLog(@"===> done with findRemoteDidFinish (queue: %@, operations: %@)", 
     //    [[self coreManager] deserialzationQueue], [[[self coreManager] deserialzationQueue] operations] );
 }
 
 + (void) findRemoteDidFail:(CoreRequest*)request {
+	UIApplication* app = [UIApplication sharedApplication];
+	app.networkActivityIndicatorVisible = NO;	
+	
     // Notify core delegate (if extant) of failure
     if (request.coreDelegate && request.coreSelector && [request.coreDelegate respondsToSelector:request.coreSelector]) {
         CoreResult* result = [[[CoreResult alloc] initWithError:[request error]] autorelease];
