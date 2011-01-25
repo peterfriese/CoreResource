@@ -60,7 +60,9 @@
     return [[self class] bundlePathForResource:[self localId] action:action];
 }
 
-+ (void) configureRequest:(CoreRequest*)request forAction:(NSString*)action {}
++ (void) configureRequest:(CoreRequest*)request forAction:(NSString*)action {
+    [[CoreManager main] configureRequest:request forAction:action onResource:self];
+}
 
 
 

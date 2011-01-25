@@ -7,8 +7,16 @@
 //
 
 #import "ASIHTTPRequest.h"
+#import "CoreRequest.h"
+
+@class CoreResource;
+
+@protocol CoreRequestConfigurationDelegate <NSObject>
+- (void) configureRequest:(CoreRequest*)request forAction:(NSString*)action onResource:(CoreResource*)resource;
+@end
 
 @interface CoreManager : NSObject {
+    id<CoreRequestConfigurationDelegate> requestConfigurationDelegate;
     NSManagedObjectModel *managedObjectModel;
     NSManagedObjectContext *managedObjectContext;
     NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -34,6 +42,7 @@
     int logLevel;
 }
 
+@property (nonatomic, retain) id<CoreRequestConfigurationDelegate> requestConfigurationDelegate;
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
@@ -63,6 +72,7 @@
 #pragma mark -
 #pragma mark Networking
 - (void) enqueueRequest:(ASIHTTPRequest*)request;
+- (void) configureRequest:(CoreRequest*)request forAction:(NSString*)action onResource:(CoreResource*)resource;
 
 #pragma mark -
 #pragma mark Alerts & Errors

@@ -14,6 +14,7 @@
 
 @implementation CoreManager
 
+@synthesize requestConfigurationDelegate;
 @synthesize persistentStoreCoordinator, managedObjectContext, managedObjectModel;
 @synthesize requestQueue, deserialzationQueue;
 @synthesize remoteSiteURL, useBundleRequests, bundleRequestDelay, defaultDateParser;
@@ -85,6 +86,12 @@ static CoreManager* _main;
     if ([CoreManager main].logLevel > 2) // CHANGED removed smicolon
         NSLog(@"[CoreManager#enqueueRequest] request queued: %@", request.url);
     [requestQueue addOperation:request];
+}
+
+- (void) configureRequest:(CoreRequest*)request forAction:(NSString*)action onResource:(CoreResource*)resource {
+    if (requestConfigurationDelegate != NULL) {
+        [requestConfigurationDelegate configureRequest:request forAction:action onResource:resource];
+    }
 }
 
 
